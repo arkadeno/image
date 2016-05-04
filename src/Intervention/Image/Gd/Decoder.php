@@ -54,11 +54,18 @@ class Decoder extends \Intervention\Image\AbstractDecoder
                     "Unable to read image type. GD driver is only able to decode JPG, PNG or GIF files."
                     );
             }
-
-            // build image
-            $image = $this->initFromGdResource($core);
         }
 
+        if ($core === false) {
+            throw new \Intervention\Image\Exception\NotReadableException(
+                "Unable to read image from file ({$path})."
+            );
+        }
+
+        $this->gdResourceToTruecolor($core);
+
+        // build image
+        $image = $this->initFromGdResource($core);
         $image->mime = $info['mime'];
         $image->setFileInfoFromPath($path);
 
